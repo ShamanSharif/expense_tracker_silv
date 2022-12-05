@@ -2,7 +2,7 @@ import 'package:expense_tracker/model/expense_model.dart';
 import 'package:flutter/material.dart';
 
 class ETExpense extends StatelessWidget {
-  final Expense expense;
+  final ExpenseCategory expense;
   const ETExpense({
     super.key,
     required this.expense,
@@ -15,12 +15,38 @@ class ETExpense extends StatelessWidget {
       children: [
         Row(
           children: [
-            Icon(expense.iconData ?? Icons.star),
+            Container(
+              decoration: BoxDecoration(
+                color: Color(0xFFDCF8F6),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  vertical: 10.0,
+                  horizontal: 15.0,
+                ),
+                child: Icon(
+                  expense.iconData ?? Icons.star,
+                  color: Color(0xFF56ACC4),
+                ),
+              ),
+            ),
             SizedBox(width: 20),
-            Text(expense.name),
+            Text(
+              expense.name,
+              style: TextStyle(
+                fontWeight: FontWeight.w700,
+              ),
+            ),
           ],
         ),
-        Text(expense.amount.toString() + " BDT"),
+        Text(
+          expense.amount.toString() + " BDT",
+          style: TextStyle(
+            fontWeight: FontWeight.w700,
+            color: Color(0xFF057FA6),
+          ),
+        ),
       ],
     );
   }

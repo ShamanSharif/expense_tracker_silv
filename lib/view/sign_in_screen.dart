@@ -14,6 +14,7 @@ class SignInScreen extends StatefulWidget {
 }
 
 class _SignInScreenState extends State<SignInScreen> {
+  bool _osbcureText = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -40,6 +41,17 @@ class _SignInScreenState extends State<SignInScreen> {
                     padding: const EdgeInsets.symmetric(vertical: 10.0),
                     child: ETTextField(
                       hintText: "Enter Password",
+                      osbcureText: _osbcureText,
+                      suffixIcon: IconButton(
+                        icon: _osbcureText
+                            ? Icon(Icons.visibility)
+                            : Icon(Icons.visibility_off),
+                        onPressed: () {
+                          setState(() {
+                            _osbcureText = !_osbcureText;
+                          });
+                        },
+                      ),
                     ),
                   ),
                   ETTextButton(

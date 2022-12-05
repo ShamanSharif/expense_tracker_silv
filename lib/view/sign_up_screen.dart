@@ -14,6 +14,8 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
+  bool _osbcureText = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -49,6 +51,17 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     padding: const EdgeInsets.symmetric(vertical: 10.0),
                     child: ETTextField(
                       hintText: "Enter Password",
+                      osbcureText: _osbcureText,
+                      suffixIcon: IconButton(
+                        icon: _osbcureText
+                            ? Icon(Icons.visibility)
+                            : Icon(Icons.visibility_off),
+                        onPressed: () {
+                          setState(() {
+                            _osbcureText = !_osbcureText;
+                          });
+                        },
+                      ),
                     ),
                   ),
                 ],

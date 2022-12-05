@@ -5,6 +5,8 @@ import 'package:expense_tracker/view/viewmodel/et_expense.dart';
 import 'package:expense_tracker/view/viewmodel/et_text_button.dart';
 import 'package:flutter/material.dart';
 
+import 'viewmodel/et_drawer_button.dart';
+
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
 
@@ -13,33 +15,33 @@ class DashboardScreen extends StatefulWidget {
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
-  List<Expense> expenses = [
-    Expense(
+  List<ExpenseCategory> expenses = [
+    ExpenseCategory(
       iconData: Icons.monitor,
       name: "Hardware",
       amount: 20220,
     ),
-    Expense(
+    ExpenseCategory(
       iconData: Icons.book,
       name: "Study Material",
       amount: 7899,
     ),
-    Expense(
+    ExpenseCategory(
       iconData: Icons.bus_alert,
       name: "Transport",
       amount: 14889,
     ),
-    Expense(
+    ExpenseCategory(
       iconData: Icons.local_pizza,
       name: "Food",
       amount: 12000,
     ),
-    Expense(
+    ExpenseCategory(
       iconData: Icons.school,
       name: "Club Fund",
       amount: 15970,
     ),
-    Expense(
+    ExpenseCategory(
       iconData: Icons.place,
       name: "Recreation",
       amount: 25000,
@@ -66,29 +68,73 @@ class _DashboardScreenState extends State<DashboardScreen> {
         ],
       ),
       drawer: Drawer(
-        child: SafeArea(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: ETTextButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) {
-                          return CategoriesScreen();
-                        },
+        backgroundColor: Color(0xFFE8FAF2),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            Image.asset("assets/images/drawer_banner.png"),
+            Expanded(
+              child: SafeArea(
+                child: Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      Column(
+                        children: [
+                          Text(
+                            "Expense Tracker",
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                          SizedBox(height: 20),
+                          ETDrawerButton(
+                            label: 'Home',
+                            iconData: Icons.home,
+                            onPressed: () {},
+                          ),
+                          ETDrawerButton(
+                            label: 'Calender',
+                            iconData: Icons.calendar_month,
+                            onPressed: () {},
+                          ),
+                          ETDrawerButton(
+                            label: 'Catgory',
+                            iconData: Icons.list,
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) {
+                                    return CategoriesScreen();
+                                  },
+                                ),
+                              );
+                            },
+                          ),
+                          ETDrawerButton(
+                            label: 'Settings',
+                            iconData: Icons.settings,
+                            onPressed: () {},
+                          ),
+                        ],
                       ),
-                    );
-                  },
-                  child: Text("Categories"),
+                      Padding(
+                        padding: const EdgeInsets.all(20.0),
+                        child: Text(
+                            "Expense Tracker is built with ❤️️ by \n'Sadia Islam Silvee'"),
+                      )
+                    ],
+                  ),
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
       body: SafeArea(
@@ -105,27 +151,34 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   Text(
                     "Alloted amount",
                     style: TextStyle(
+                      color: Color(0xFF057FA6),
                       fontSize: 18,
                     ),
                   ),
+                  SizedBox(height: 5),
                   Text(
                     "1,50,000 BDT",
                     style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w500,
+                      color: Color(0xFF057FA6),
+                      fontSize: 20,
+                      fontWeight: FontWeight.w700,
                     ),
                   ),
+                  SizedBox(height: 5),
                   Text(
                     "Remains",
                     style: TextStyle(
+                      color: Color(0xFF057FA6),
                       fontSize: 18,
                     ),
                   ),
+                  SizedBox(height: 5),
                   Text(
                     "1,00,000 BDT",
                     style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w500,
+                      color: Color(0xFF057FA6),
+                      fontSize: 20,
+                      fontWeight: FontWeight.w700,
                     ),
                   ),
                 ],
@@ -143,12 +196,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
               child: Text(
                 "Expense Branch",
                 style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w500,
+                  // fontFamily: "BebasNeue",
+                  fontSize: 22,
+                  fontWeight: FontWeight.w700,
                 ),
               ),
             ),
-            for (Expense e in expenses)
+            for (ExpenseCategory e in expenses)
               Padding(
                 padding: const EdgeInsets.symmetric(
                   vertical: 8.0,

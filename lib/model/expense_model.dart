@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-class Expense {
+class ExpenseCategory {
   IconData? iconData;
   String name;
   int amount;
 
-  Expense({
+  ExpenseCategory({
     required this.name,
     this.amount = 0,
     this.iconData,

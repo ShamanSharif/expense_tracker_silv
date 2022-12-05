@@ -9,33 +9,33 @@ class CategoriesScreen extends StatefulWidget {
 }
 
 class _CategoriesScreenState extends State<CategoriesScreen> {
-  List<Expense> expenses = [
-    Expense(
+  List<ExpenseCategory> expenses = [
+    ExpenseCategory(
       iconData: Icons.monitor,
       name: "Hardware",
       amount: 20220,
     ),
-    Expense(
+    ExpenseCategory(
       iconData: Icons.book,
       name: "Study Material",
       amount: 7899,
     ),
-    Expense(
+    ExpenseCategory(
       iconData: Icons.bus_alert,
       name: "Transport",
       amount: 14889,
     ),
-    Expense(
+    ExpenseCategory(
       iconData: Icons.local_pizza,
       name: "Food",
       amount: 12000,
     ),
-    Expense(
+    ExpenseCategory(
       iconData: Icons.school,
       name: "Club Fund",
       amount: 15970,
     ),
-    Expense(
+    ExpenseCategory(
       iconData: Icons.place,
       name: "Recreation",
       amount: 25000,
@@ -72,7 +72,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
           padding: const EdgeInsets.all(20.0),
           child: Column(
             children: [
-              for (Expense e in expenses)
+              for (ExpenseCategory e in expenses)
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
