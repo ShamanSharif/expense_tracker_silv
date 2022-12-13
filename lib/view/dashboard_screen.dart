@@ -19,32 +19,38 @@ class _DashboardScreenState extends State<DashboardScreen> {
     ExpenseCategory(
       iconData: Icons.monitor,
       name: "Hardware",
-      amount: 20220,
+      spent: 20220,
+      remains: 654,
     ),
     ExpenseCategory(
       iconData: Icons.book,
       name: "Study Material",
-      amount: 7899,
+      spent: 7899,
+      remains: 6541,
     ),
     ExpenseCategory(
       iconData: Icons.bus_alert,
       name: "Transport",
-      amount: 14889,
+      spent: 14889,
+      remains: 3654,
     ),
     ExpenseCategory(
       iconData: Icons.local_pizza,
       name: "Food",
-      amount: 12000,
+      spent: 12000,
+      remains: 1654,
     ),
     ExpenseCategory(
       iconData: Icons.school,
       name: "Club Fund",
-      amount: 15970,
+      spent: 15970,
+      remains: 5654,
     ),
     ExpenseCategory(
       iconData: Icons.place,
       name: "Recreation",
-      amount: 25000,
+      spent: 25000,
+      remains: 21000,
     ),
   ];
 

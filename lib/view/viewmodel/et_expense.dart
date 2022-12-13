@@ -40,12 +40,46 @@ class ETExpense extends StatelessWidget {
             ),
           ],
         ),
-        Text(
-          expense.amount.toString() + " BDT",
-          style: TextStyle(
-            fontWeight: FontWeight.w700,
-            color: Color(0xFF057FA6),
-          ),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            Row(
+              children: [
+                Text(
+                  "Spent: ",
+                  style: TextStyle(
+                    fontWeight: FontWeight.w500,
+                    color: Colors.black,
+                  ),
+                ),
+                Text(
+                  expense.spent.toString() + " BDT",
+                  style: TextStyle(
+                    fontWeight: FontWeight.w700,
+                    color: Color(0xFF057FA6),
+                  ),
+                ),
+              ],
+            ),
+            Row(
+              children: [
+                Text(
+                  "Remains: ",
+                  style: TextStyle(
+                    fontWeight: FontWeight.w500,
+                    color: Colors.black,
+                  ),
+                ),
+                Text(
+                  expense.remains.toString() + " BDT",
+                  style: TextStyle(
+                    fontWeight: FontWeight.w700,
+                    color: Color(0xFF057FA6),
+                  ),
+                ),
+              ],
+            ),
+          ],
         ),
       ],
     );

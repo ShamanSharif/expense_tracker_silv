@@ -3,11 +3,13 @@ import 'package:flutter/material.dart';
 class ExpenseCategory {
   IconData? iconData;
   String name;
-  int amount;
+  int spent;
+  int remains;
 
   ExpenseCategory({
     required this.name,
-    this.amount = 0,
+    this.spent = 0,
+    this.remains = 0,
     this.iconData,
   });
 }
