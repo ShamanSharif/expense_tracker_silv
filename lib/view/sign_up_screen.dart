@@ -15,6 +15,7 @@ class SignUpScreen extends StatefulWidget {
 
 class _SignUpScreenState extends State<SignUpScreen> {
   bool _osbcureText = false;
+  int? _radioGroupValue;
 
   @override
   Widget build(BuildContext context) {
@@ -64,10 +65,48 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       ),
                     ),
                   ),
+                  Row(
+                    children: [
+                      Row(
+                        children: [
+                          Radio(
+                            value: 1,
+                            groupValue: _radioGroupValue,
+                            onChanged: (value) {
+                              setState(() => _radioGroupValue = value);
+                            },
+                          ),
+                          Text("Student"),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Radio(
+                            value: 2,
+                            groupValue: _radioGroupValue,
+                            onChanged: (value) {
+                              setState(() => _radioGroupValue = value);
+                            },
+                          ),
+                          Text("Teacher"),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Radio(
+                            value: 3,
+                            groupValue: _radioGroupValue,
+                            onChanged: (value) {
+                              setState(() => _radioGroupValue = value);
+                            },
+                          ),
+                          Text("Stuff"),
+                        ],
+                      ),
+                    ],
+                  ),
                 ],
               ),
-              // TODO: Radio Field
-
               ETButton(
                 onPressed: () {
                   Navigator.pushAndRemoveUntil(

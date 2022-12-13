@@ -127,8 +127,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       Padding(
                         padding: const EdgeInsets.all(20.0),
                         child: Text(
-                            "Expense Tracker is built with ❤️️ by \n'Sadia Islam Silvee'"),
-                      )
+                          "Expense Tracker is built with ❤️️ by \n'Sadia Islam Silvee'",
+                        ),
+                      ),
                     ],
                   ),
                 ),

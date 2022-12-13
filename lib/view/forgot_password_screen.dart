@@ -1,5 +1,5 @@
 import 'package:expense_tracker/view/dashboard_screen.dart';
-import 'package:expense_tracker/view/forgot_password_screen.dart';
+import 'package:expense_tracker/view/forgot_password_code_screen.dart';
 import 'package:flutter/material.dart';
 
 import 'sign_up_screen.dart';
@@ -7,15 +7,14 @@ import 'viewmodel/et_button.dart';
 import 'viewmodel/et_text_button.dart';
 import 'viewmodel/et_text_field.dart';
 
-class SignInScreen extends StatefulWidget {
-  const SignInScreen({super.key});
+class ForgotPasswordScreen extends StatefulWidget {
+  const ForgotPasswordScreen({super.key});
 
   @override
-  State<SignInScreen> createState() => _SignInScreenState();
+  State<ForgotPasswordScreen> createState() => _ForgotPasswordScreenState();
 }
 
-class _SignInScreenState extends State<SignInScreen> {
-  bool _osbcureText = false;
+class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,7 +26,7 @@ class _SignInScreenState extends State<SignInScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               Text(
-                "Sign In",
+                "Forgot Password",
                 style: TextStyle(
                   fontSize: 32,
                   fontWeight: FontWeight.w500,
@@ -36,37 +35,16 @@ class _SignInScreenState extends State<SignInScreen> {
               Column(
                 children: [
                   ETTextField(
-                    hintText: "Enter email",
+                    hintText: "Enter your email",
                   ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 10.0),
-                    child: ETTextField(
-                      hintText: "Enter Password",
-                      osbcureText: _osbcureText,
-                      suffixIcon: IconButton(
-                        icon: _osbcureText
-                            ? Icon(Icons.visibility)
-                            : Icon(Icons.visibility_off),
-                        onPressed: () {
-                          setState(() {
-                            _osbcureText = !_osbcureText;
-                          });
-                        },
-                      ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Text(
+                    "If you have an account accociated with your email address. We will send you an email on that address with a one time code to reset your password.",
+                    style: TextStyle(
+                      fontWeight: FontWeight.w500,
                     ),
-                  ),
-                  ETTextButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) {
-                            return const ForgotPasswordScreen();
-                          },
-                        ),
-                      );
-                    },
-                    child: Text("Forgot Password?"),
                   ),
                 ],
               ),
@@ -78,7 +56,7 @@ class _SignInScreenState extends State<SignInScreen> {
                       context,
                       MaterialPageRoute(
                         builder: (context) {
-                          return DashboardScreen();
+                          return const ForgotPasswordCodeScreen();
                         },
                       ),
                       (route) => false,

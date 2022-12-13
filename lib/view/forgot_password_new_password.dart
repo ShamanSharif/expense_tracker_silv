@@ -1,21 +1,24 @@
 import 'package:expense_tracker/view/dashboard_screen.dart';
 import 'package:expense_tracker/view/forgot_password_screen.dart';
+import 'package:expense_tracker/view/sign_in_screen.dart';
 import 'package:flutter/material.dart';
 
-import 'sign_up_screen.dart';
 import 'viewmodel/et_button.dart';
 import 'viewmodel/et_text_button.dart';
 import 'viewmodel/et_text_field.dart';
 
-class SignInScreen extends StatefulWidget {
-  const SignInScreen({super.key});
+class ForgotPasswordNewPasswordScreen extends StatefulWidget {
+  const ForgotPasswordNewPasswordScreen({super.key});
 
   @override
-  State<SignInScreen> createState() => _SignInScreenState();
+  State<ForgotPasswordNewPasswordScreen> createState() =>
+      _ForgotPasswordNewPasswordScreenState();
 }
 
-class _SignInScreenState extends State<SignInScreen> {
+class _ForgotPasswordNewPasswordScreenState
+    extends State<ForgotPasswordNewPasswordScreen> {
   bool _osbcureText = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,7 +30,7 @@ class _SignInScreenState extends State<SignInScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               Text(
-                "Sign In",
+                "New Password",
                 style: TextStyle(
                   fontSize: 32,
                   fontWeight: FontWeight.w500,
@@ -36,12 +39,23 @@ class _SignInScreenState extends State<SignInScreen> {
               Column(
                 children: [
                   ETTextField(
-                    hintText: "Enter email",
+                    hintText: "Enter new password",
+                    osbcureText: _osbcureText,
+                    suffixIcon: IconButton(
+                      icon: _osbcureText
+                          ? Icon(Icons.visibility)
+                          : Icon(Icons.visibility_off),
+                      onPressed: () {
+                        setState(() {
+                          _osbcureText = !_osbcureText;
+                        });
+                      },
+                    ),
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 10.0),
                     child: ETTextField(
-                      hintText: "Enter Password",
+                      hintText: "Confirm new password",
                       osbcureText: _osbcureText,
                       suffixIcon: IconButton(
                         icon: _osbcureText
@@ -55,18 +69,8 @@ class _SignInScreenState extends State<SignInScreen> {
                       ),
                     ),
                   ),
-                  ETTextButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) {
-                            return const ForgotPasswordScreen();
-                          },
-                        ),
-                      );
-                    },
-                    child: Text("Forgot Password?"),
+                  const SizedBox(
+                    height: 10,
                   ),
                 ],
               ),
@@ -78,7 +82,7 @@ class _SignInScreenState extends State<SignInScreen> {
                       context,
                       MaterialPageRoute(
                         builder: (context) {
-                          return DashboardScreen();
+                          return SignInScreen();
                         },
                       ),
                       (route) => false,
@@ -92,20 +96,6 @@ class _SignInScreenState extends State<SignInScreen> {
                   ),
                   color: Color(0xFF56ACC4),
                 ),
-              ),
-              ETTextButton(
-                onPressed: () {
-                  Navigator.pushAndRemoveUntil(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) {
-                        return SignUpScreen();
-                      },
-                    ),
-                    (route) => false,
-                  );
-                },
-                child: Text("Don't have an account? Sign Up"),
               ),
             ],
           ),

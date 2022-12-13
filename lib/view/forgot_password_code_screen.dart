@@ -1,4 +1,5 @@
 import 'package:expense_tracker/view/dashboard_screen.dart';
+import 'package:expense_tracker/view/forgot_password_new_password.dart';
 import 'package:expense_tracker/view/forgot_password_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -7,15 +8,15 @@ import 'viewmodel/et_button.dart';
 import 'viewmodel/et_text_button.dart';
 import 'viewmodel/et_text_field.dart';
 
-class SignInScreen extends StatefulWidget {
-  const SignInScreen({super.key});
+class ForgotPasswordCodeScreen extends StatefulWidget {
+  const ForgotPasswordCodeScreen({super.key});
 
   @override
-  State<SignInScreen> createState() => _SignInScreenState();
+  State<ForgotPasswordCodeScreen> createState() =>
+      _ForgotPasswordCodeScreenState();
 }
 
-class _SignInScreenState extends State<SignInScreen> {
-  bool _osbcureText = false;
+class _ForgotPasswordCodeScreenState extends State<ForgotPasswordCodeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,7 +28,7 @@ class _SignInScreenState extends State<SignInScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               Text(
-                "Sign In",
+                "Enter OTP",
                 style: TextStyle(
                   fontSize: 32,
                   fontWeight: FontWeight.w500,
@@ -36,37 +37,16 @@ class _SignInScreenState extends State<SignInScreen> {
               Column(
                 children: [
                   ETTextField(
-                    hintText: "Enter email",
+                    hintText: "Enter one time password from email",
                   ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 10.0),
-                    child: ETTextField(
-                      hintText: "Enter Password",
-                      osbcureText: _osbcureText,
-                      suffixIcon: IconButton(
-                        icon: _osbcureText
-                            ? Icon(Icons.visibility)
-                            : Icon(Icons.visibility_off),
-                        onPressed: () {
-                          setState(() {
-                            _osbcureText = !_osbcureText;
-                          });
-                        },
-                      ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Text(
+                    "Please enter your one time password from your email inbox. If you don't see an email, please wait about 5 minutes and also check the spam folder.",
+                    style: TextStyle(
+                      fontWeight: FontWeight.w500,
                     ),
-                  ),
-                  ETTextButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) {
-                            return const ForgotPasswordScreen();
-                          },
-                        ),
-                      );
-                    },
-                    child: Text("Forgot Password?"),
                   ),
                 ],
               ),
@@ -78,7 +58,7 @@ class _SignInScreenState extends State<SignInScreen> {
                       context,
                       MaterialPageRoute(
                         builder: (context) {
-                          return DashboardScreen();
+                          return ForgotPasswordNewPasswordScreen();
                         },
                       ),
                       (route) => false,
@@ -99,13 +79,13 @@ class _SignInScreenState extends State<SignInScreen> {
                     context,
                     MaterialPageRoute(
                       builder: (context) {
-                        return SignUpScreen();
+                        return ForgotPasswordScreen();
                       },
                     ),
                     (route) => false,
                   );
                 },
-                child: Text("Don't have an account? Sign Up"),
+                child: Text("Recheck email address"),
               ),
             ],
           ),
