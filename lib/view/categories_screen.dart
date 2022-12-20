@@ -1,6 +1,8 @@
 import 'package:expense_tracker/model/expense_model.dart';
 import 'package:flutter/material.dart';
 
+import 'viewmodel/et_text_field.dart';
+
 class CategoriesScreen extends StatefulWidget {
   const CategoriesScreen({super.key});
 
@@ -66,7 +68,9 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
             ),
           ),
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              _showAddCategoryModal();
+            },
             icon: Icon(
               Icons.add,
             ),
@@ -90,7 +94,9 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                       ],
                     ),
                     IconButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        _showEditCategoryModal(e);
+                      },
                       icon: Icon(Icons.edit),
                     )
                   ],
@@ -99,6 +105,151 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
           ),
         ),
       ),
+    );
+  }
+
+  _showAddCategoryModal() {
+    return showDialog(
+      context: context,
+      builder: (context) {
+        return Center(
+          child: Container(
+            width: MediaQuery.of(context).size.width * 0.7,
+            color: Colors.red,
+            child: Material(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    color: Color(0xFF3F9DBB),
+                    child: Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Center(
+                        child: Text(
+                          "Add Category",
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Container(
+                    color: Colors.white,
+                    child: Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 8.0),
+                            child: ETTextField(
+                              hintText: "Category name",
+                            ),
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              IconButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                icon: Icon(Icons.close),
+                              ),
+                              SizedBox(),
+                              IconButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                icon: Icon(Icons.done),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  _showEditCategoryModal(ExpenseCategory e) {
+    return showDialog(
+      context: context,
+      builder: (context) {
+        return Center(
+          child: Container(
+            width: MediaQuery.of(context).size.width * 0.7,
+            color: Colors.red,
+            child: Material(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    color: Color(0xFF3F9DBB),
+                    child: Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Center(
+                        child: Text(
+                          "Edit Category",
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Container(
+                    color: Colors.white,
+                    child: Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 8.0),
+                            child: ETTextField(
+                              hintText: "Category name",
+                              initialValue: e.name,
+                            ),
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              IconButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                icon: Icon(Icons.close),
+                              ),
+                              SizedBox(),
+                              IconButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                icon: Icon(Icons.done),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 }
