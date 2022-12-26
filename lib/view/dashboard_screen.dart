@@ -3,6 +3,7 @@ import 'package:expense_tracker/view/add_expense_screen.dart';
 import 'package:expense_tracker/view/categories_screen.dart';
 import 'package:expense_tracker/view/viewmodel/et_expense.dart';
 import 'package:expense_tracker/view/viewmodel/et_text_button.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import 'viewmodel/et_drawer_button.dart';
@@ -15,6 +16,7 @@ class DashboardScreen extends StatefulWidget {
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
+  String _useremail = "";
   List<ExpenseCategory> expenses = [
     ExpenseCategory(
       iconData: Icons.monitor,
@@ -55,6 +57,20 @@ class _DashboardScreenState extends State<DashboardScreen> {
   ];
 
   @override
+  void initState() {
+    super.initState();
+    FirebaseAuth.instance.userChanges().listen((User? user) {
+      if (user == null) {
+        print('User is currently signed out!');
+      } else {
+        setState(() {
+          _useremail = user.email!;
+        });
+      }
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color(0xFFE8FAF2),
@@ -65,10 +81,18 @@ class _DashboardScreenState extends State<DashboardScreen> {
         foregroundColor: Colors.black,
         title: Text("Expense Tracker"),
         actions: [
-          IconButton(
-            onPressed: () {},
-            icon: Icon(
-              Icons.person_outlined,
+          GestureDetector(
+            onTap: () {},
+            child: Row(
+              children: [
+                Icon(
+                  Icons.person_outlined,
+                ),
+                const SizedBox(
+                  width: 5,
+                ),
+                Text(_useremail),
+              ],
             ),
           ),
         ],
