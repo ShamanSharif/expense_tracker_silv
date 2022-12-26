@@ -1,4 +1,5 @@
 import 'package:expense_tracker/view/sign_in_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import 'dashboard_screen.dart';
@@ -14,8 +15,29 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   bool _osbcureText = false;
+  String? _emailAddress;
+  String? _password;
   int? _radioGroupValue;
+
+  _createUser() async {
+    try {
+      final credential =
+          await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: _emailAddress!,
+        password: _password!,
+      );
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'weak-password') {
+        print('The password provided is too weak.');
+      } else if (e.code == 'email-already-in-use') {
+        print('The account already exists for that email.');
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,90 +56,107 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   fontWeight: FontWeight.w500,
                 ),
               ),
-              Column(
-                children: [
-                  ETTextField(
-                    hintText: "Full Name",
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 10.0),
-                    child: ETTextField(
-                      hintText: "Enter Email",
+              Form(
+                key: _formKey,
+                child: Column(
+                  children: [
+                    ETTextField(
+                      hintText: "Full Name",
                     ),
-                  ),
-                  ETTextField(
-                    hintText: "Enter Phone Number",
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 10.0),
-                    child: ETTextField(
-                      hintText: "Enter Password",
-                      osbcureText: _osbcureText,
-                      suffixIcon: IconButton(
-                        icon: _osbcureText
-                            ? Icon(Icons.visibility)
-                            : Icon(Icons.visibility_off),
-                        onPressed: () {
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 10.0),
+                      child: ETTextField(
+                        hintText: "Enter Email",
+                        onSaved: (value) {
                           setState(() {
-                            _osbcureText = !_osbcureText;
+                            _emailAddress = value;
                           });
                         },
                       ),
                     ),
-                  ),
-                  Row(
-                    children: [
-                      Row(
-                        children: [
-                          Radio(
-                            value: 1,
-                            groupValue: _radioGroupValue,
-                            onChanged: (value) {
-                              setState(() => _radioGroupValue = value);
-                            },
-                          ),
-                          Text("Student"),
-                        ],
+                    ETTextField(
+                      hintText: "Enter Phone Number",
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 10.0),
+                      child: ETTextField(
+                        hintText: "Enter Password",
+                        onSaved: (value) {
+                          setState(() {
+                            _password = value;
+                          });
+                        },
+                        osbcureText: _osbcureText,
+                        suffixIcon: IconButton(
+                          icon: _osbcureText
+                              ? Icon(Icons.visibility)
+                              : Icon(Icons.visibility_off),
+                          onPressed: () {
+                            setState(() {
+                              _osbcureText = !_osbcureText;
+                            });
+                          },
+                        ),
                       ),
-                      Row(
-                        children: [
-                          Radio(
-                            value: 2,
-                            groupValue: _radioGroupValue,
-                            onChanged: (value) {
-                              setState(() => _radioGroupValue = value);
-                            },
-                          ),
-                          Text("Teacher"),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          Radio(
-                            value: 3,
-                            groupValue: _radioGroupValue,
-                            onChanged: (value) {
-                              setState(() => _radioGroupValue = value);
-                            },
-                          ),
-                          Text("Stuff"),
-                        ],
-                      ),
-                    ],
-                  ),
-                ],
+                    ),
+                    Row(
+                      children: [
+                        Row(
+                          children: [
+                            Radio(
+                              value: 1,
+                              groupValue: _radioGroupValue,
+                              onChanged: (value) {
+                                setState(() => _radioGroupValue = value);
+                              },
+                            ),
+                            Text("Student"),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            Radio(
+                              value: 2,
+                              groupValue: _radioGroupValue,
+                              onChanged: (value) {
+                                setState(() => _radioGroupValue = value);
+                              },
+                            ),
+                            Text("Teacher"),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            Radio(
+                              value: 3,
+                              groupValue: _radioGroupValue,
+                              onChanged: (value) {
+                                setState(() => _radioGroupValue = value);
+                              },
+                            ),
+                            Text("Stuff"),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
               ETButton(
-                onPressed: () {
-                  Navigator.pushAndRemoveUntil(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) {
-                        return DashboardScreen();
-                      },
-                    ),
-                    (route) => false,
-                  );
+                onPressed: () async {
+                  _formKey.currentState?.save();
+                  if (_emailAddress != null && _password != null) {
+                    await _createUser();
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) {
+                          return DashboardScreen();
+                        },
+                      ),
+                      (route) => false,
+                    );
+                  }
                 },
                 child: Text(
                   "NEXT",

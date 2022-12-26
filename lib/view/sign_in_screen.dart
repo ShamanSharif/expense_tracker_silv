@@ -1,5 +1,6 @@
 import 'package:expense_tracker/view/dashboard_screen.dart';
 import 'package:expense_tracker/view/forgot_password_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import 'sign_up_screen.dart';
@@ -15,7 +16,27 @@ class SignInScreen extends StatefulWidget {
 }
 
 class _SignInScreenState extends State<SignInScreen> {
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
   bool _osbcureText = false;
+  String? _emailAddress;
+  String? _password;
+
+  _signIn() async {
+    try {
+      final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: _emailAddress!,
+        password: _password!,
+      );
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'user-not-found') {
+        print('No user found for that email.');
+      } else if (e.code == 'wrong-password') {
+        print('Wrong password provided for that user.');
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,47 +54,65 @@ class _SignInScreenState extends State<SignInScreen> {
                   fontWeight: FontWeight.w500,
                 ),
               ),
-              Column(
-                children: [
-                  ETTextField(
-                    hintText: "Enter email",
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 10.0),
-                    child: ETTextField(
-                      hintText: "Enter Password",
-                      osbcureText: _osbcureText,
-                      suffixIcon: IconButton(
-                        icon: _osbcureText
-                            ? Icon(Icons.visibility)
-                            : Icon(Icons.visibility_off),
-                        onPressed: () {
+              Form(
+                key: _formKey,
+                child: Column(
+                  children: [
+                    ETTextField(
+                      hintText: "Enter email",
+                      onSaved: (value) {
+                        setState(() {
+                          _emailAddress = value;
+                        });
+                      },
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 10.0),
+                      child: ETTextField(
+                        hintText: "Enter Password",
+                        onSaved: (value) {
                           setState(() {
-                            _osbcureText = !_osbcureText;
+                            _password = value;
                           });
                         },
-                      ),
-                    ),
-                  ),
-                  ETTextButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) {
-                            return const ForgotPasswordScreen();
+                        osbcureText: _osbcureText,
+                        suffixIcon: IconButton(
+                          icon: _osbcureText
+                              ? Icon(Icons.visibility)
+                              : Icon(Icons.visibility_off),
+                          onPressed: () {
+                            setState(() {
+                              _osbcureText = !_osbcureText;
+                            });
                           },
                         ),
-                      );
-                    },
-                    child: Text("Forgot Password?"),
-                  ),
-                ],
+                      ),
+                    ),
+                    ETTextButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) {
+                              return const ForgotPasswordScreen();
+                            },
+                          ),
+                        );
+                      },
+                      child: Text("Forgot Password?"),
+                    ),
+                  ],
+                ),
               ),
               Padding(
                 padding: const EdgeInsets.all(20.0),
                 child: ETButton(
-                  onPressed: () {
+                  onPressed: () async {
+                    _formKey.currentState?.save();
+                    if (_emailAddress == null || _password == null) {
+                      return;
+                    }
+                    await _signIn();
                     Navigator.pushAndRemoveUntil(
                       context,
                       MaterialPageRoute(
