@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:expense_tracker/model/expense_model.dart';
 import 'package:flutter/material.dart';
 
@@ -11,6 +12,9 @@ class CategoriesScreen extends StatefulWidget {
 }
 
 class _CategoriesScreenState extends State<CategoriesScreen> {
+  final GlobalKey<FormState> _keyOne = GlobalKey<FormState>();
+  final db = FirebaseFirestore.instance;
+
   List<ExpenseCategory> expenses = [
     ExpenseCategory(
       iconData: Icons.monitor,
@@ -49,6 +53,8 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
       remains: 1135,
     ),
   ];
+
+  String? categoryName;
 
   @override
   Widget build(BuildContext context) {
@@ -112,69 +118,90 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
     return showDialog(
       context: context,
       builder: (context) {
-        return Center(
-          child: Container(
-            width: MediaQuery.of(context).size.width * 0.7,
-            color: Colors.red,
-            child: Material(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Container(
-                    color: Color(0xFF3F9DBB),
-                    child: Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Center(
-                        child: Text(
-                          "Add Category",
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.white,
+        return StatefulBuilder(
+          builder: (context, StateSetter state) {
+            return Center(
+              child: Container(
+                width: MediaQuery.of(context).size.width * 0.7,
+                color: Colors.red,
+                child: Material(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Container(
+                        color: Color(0xFF3F9DBB),
+                        child: Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Center(
+                            child: Text(
+                              "Add Category",
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.white,
+                              ),
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  ),
-                  Container(
-                    color: Colors.white,
-                    child: Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 8.0),
-                            child: ETTextField(
-                              hintText: "Category name",
+                      Container(
+                        color: Colors.white,
+                        child: Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Form(
+                            key: _keyOne,
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 8.0),
+                                  child: ETTextField(
+                                    hintText: "Category name",
+                                    onSaved: (value) {
+                                      setState(() {
+                                        state(() {
+                                          categoryName = value;
+                                        });
+                                      });
+                                    },
+                                  ),
+                                ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    IconButton(
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                      icon: Icon(Icons.close),
+                                    ),
+                                    SizedBox(),
+                                    IconButton(
+                                      onPressed: () {
+                                        _keyOne.currentState?.save();
+                                        db.collection("category").add({
+                                          "name": categoryName
+                                        }).then((DocumentReference doc) => print(
+                                            'DocumentSnapshot added with ID: ${doc.id}'));
+                                        Navigator.pop(context);
+                                      },
+                                      icon: Icon(Icons.done),
+                                    ),
+                                  ],
+                                ),
+                              ],
                             ),
                           ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              IconButton(
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                },
-                                icon: Icon(Icons.close),
-                              ),
-                              SizedBox(),
-                              IconButton(
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                },
-                                icon: Icon(Icons.done),
-                              ),
-                            ],
-                          ),
-                        ],
+                        ),
                       ),
-                    ),
+                    ],
                   ),
-                ],
+                ),
               ),
-            ),
-          ),
+            );
+          },
         );
       },
     );
