@@ -1,8 +1,6 @@
-import 'package:flutter/material.dart';
-
 class ExpenseCategory {
   String docId;
-  IconData? iconData;
+  bool isStarred;
   String name;
   int spent;
   int remains;
@@ -12,6 +10,6 @@ class ExpenseCategory {
     required this.name,
     this.spent = 0,
     this.remains = 0,
-    this.iconData,
+    this.isStarred = false,
   });
 }

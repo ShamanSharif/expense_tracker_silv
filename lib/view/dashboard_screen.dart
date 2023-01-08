@@ -1,7 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:expense_tracker/model/expense_model.dart';
 import 'package:expense_tracker/view/add_expense_screen.dart';
 import 'package:expense_tracker/view/categories_screen.dart';
 import 'package:expense_tracker/view/viewmodel/et_expense.dart';
+import 'package:expense_tracker/view/welcome_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -15,6 +17,8 @@ class DashboardScreen extends StatefulWidget {
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
+  final db = FirebaseFirestore.instance;
+
   String _useremail = "";
   List<ExpenseCategory> expenses = [
     // TODO: Fetch From DB
@@ -28,7 +32,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         print('User is currently signed out!');
       } else {
         setState(() {
-          _useremail = user.email!;
+          _useremail = user.displayName ?? "";
         });
       }
     });
@@ -46,7 +50,26 @@ class _DashboardScreenState extends State<DashboardScreen> {
         title: Text("Expense Tracker"),
         actions: [
           GestureDetector(
-            onTap: () {},
+            onTap: () {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text("Double Tap to Sign Out"),
+                ),
+              );
+            },
+            onDoubleTap: () {
+              FirebaseAuth.instance.signOut().then(
+                    (value) => Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) {
+                          return WelcomeScreen();
+                        },
+                      ),
+                      (route) => false,
+                    ),
+                  );
+            },
             child: Row(
               children: [
                 Icon(
@@ -196,6 +219,61 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   fontWeight: FontWeight.w700,
                 ),
               ),
+            ),
+            StreamBuilder<QuerySnapshot>(
+              stream: db.collection("category").snapshots(),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  final categories = snapshot.data?.docs;
+                  List<ExpenseCategory> categoriesList = [];
+                  if (categories == null) return Text("DB Fetching Error");
+                  for (var cat in categories) {
+                    String? name = cat.get("name");
+                    bool? isStarred = cat.get("starred");
+                    if (isStarred == null || isStarred == false) continue;
+                    if (name == null) continue;
+                    final category = ExpenseCategory(
+                      docId: cat.id,
+                      name: name,
+                      isStarred: isStarred ?? false,
+                    );
+                    categoriesList.add(category);
+                  }
+                  return Expanded(
+                    child: ListView(
+                      children: [
+                        for (ExpenseCategory e in categoriesList)
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 20,
+                              vertical: 5,
+                            ),
+                            child: ETExpense(expense: e),
+                          )
+                        // Row(
+                        //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        //   children: [
+                        //     Row(
+                        //       children: [
+                        //         Icon(e.isStarred
+                        //             ? Icons.star
+                        //             : Icons.star_border),
+                        //         SizedBox(width: 20),
+                        //         Text(e.name),
+                        //       ],
+                        //     ),
+                        //     Icon(Icons.edit),
+                        //   ],
+                        // ),
+                      ],
+                    ),
+                  );
+                } else {
+                  return Center(
+                    child: CircularProgressIndicator.adaptive(),
+                  );
+                }
+              },
             ),
             for (ExpenseCategory e in expenses)
               Padding(

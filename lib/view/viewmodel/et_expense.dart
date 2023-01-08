@@ -26,7 +26,7 @@ class ETExpense extends StatelessWidget {
                   horizontal: 15.0,
                 ),
                 child: Icon(
-                  expense.iconData ?? Icons.star,
+                  expense.isStarred ? Icons.star : Icons.star_border,
                   color: Color(0xFF56ACC4),
                 ),
               ),

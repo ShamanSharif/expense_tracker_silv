@@ -17,16 +17,20 @@ class SignUpScreen extends StatefulWidget {
 class _SignUpScreenState extends State<SignUpScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   bool _osbcureText = false;
+  String? _fullName;
+  String? _phoneNumber;
   String? _emailAddress;
   String? _password;
   int? _radioGroupValue;
 
   _createUser() async {
     try {
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      UserCredential credential =
+          await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: _emailAddress!,
         password: _password!,
       );
+      credential.user?.updateDisplayName(_fullName);
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
         print('The password provided is too weak.');
@@ -61,6 +65,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   children: [
                     ETTextField(
                       hintText: "Full Name",
+                      onSaved: (value) {
+                        setState(() {
+                          _fullName = value;
+                        });
+                      },
                     ),
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 10.0),

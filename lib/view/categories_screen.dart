@@ -61,10 +61,12 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                     if (categories == null) return Text("DB Fetching Error");
                     for (var cat in categories) {
                       String? name = cat.get("name");
+                      bool? isStarred = cat.get("starred");
                       if (name == null) continue;
                       final category = ExpenseCategory(
                         docId: cat.id,
                         name: name,
+                        isStarred: isStarred ?? false,
                       );
                       categoriesList.add(category);
                     }
@@ -77,7 +79,22 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                               children: [
                                 Row(
                                   children: [
-                                    Icon(e.iconData ?? Icons.star),
+                                    GestureDetector(
+                                      onTap: () {
+                                        db
+                                            .collection("category")
+                                            .doc(e.docId)
+                                            .set(
+                                          {
+                                            "starred": !e.isStarred,
+                                          },
+                                          SetOptions(merge: true),
+                                        );
+                                      },
+                                      child: Icon(e.isStarred
+                                          ? Icons.star
+                                          : Icons.star_border),
+                                    ),
                                     SizedBox(width: 20),
                                     Text(e.name),
                                   ],
@@ -95,7 +112,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                     );
                   } else {
                     return Center(
-                      child: Text("Slow Retrieve or Could not Authenticate"),
+                      child: CircularProgressIndicator.adaptive(),
                     );
                   }
                 },
@@ -175,7 +192,8 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                                       onPressed: () {
                                         _keyCreate.currentState?.save();
                                         db.collection("category").add({
-                                          "name": categoryName
+                                          "name": categoryName,
+                                          "starred": false,
                                         }).then((DocumentReference doc) => print(
                                             'DocumentSnapshot added with ID: ${doc.id}'));
                                         Navigator.pop(context);
