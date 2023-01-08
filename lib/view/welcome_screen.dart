@@ -1,6 +1,9 @@
 import 'package:expense_tracker/view/sign_in_screen.dart';
 import 'package:expense_tracker/view/viewmodel/et_button.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+
+import 'dashboard_screen.dart';
 
 class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({super.key});
@@ -10,6 +13,30 @@ class WelcomeScreen extends StatefulWidget {
 }
 
 class _WelcomeScreenState extends State<WelcomeScreen> {
+  _checkSignInAndNavigate() async {
+    String? currentUser = await FirebaseAuth.instance.currentUser?.uid;
+    if (currentUser == null) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) {
+            return const SignInScreen();
+          },
+        ),
+      );
+      return;
+    }
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(
+        builder: (context) {
+          return DashboardScreen();
+        },
+      ),
+      (route) => false,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,14 +66,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 padding: const EdgeInsets.all(20.0),
                 child: ETButton(
                   onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) {
-                          return const SignInScreen();
-                        },
-                      ),
-                    );
+                    _checkSignInAndNavigate();
                   },
                   child: Text("Get Started"),
                 ),
