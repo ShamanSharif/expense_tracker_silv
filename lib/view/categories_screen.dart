@@ -15,44 +15,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
   final GlobalKey<FormState> _keyOne = GlobalKey<FormState>();
   final db = FirebaseFirestore.instance;
 
-  List<ExpenseCategory> expenses = [
-    ExpenseCategory(
-      iconData: Icons.monitor,
-      name: "Hardware",
-      spent: 20220,
-      remains: 1135,
-    ),
-    ExpenseCategory(
-      iconData: Icons.book,
-      name: "Study Material",
-      spent: 7899,
-      remains: 1135,
-    ),
-    ExpenseCategory(
-      iconData: Icons.bus_alert,
-      name: "Transport",
-      spent: 14889,
-      remains: 1135,
-    ),
-    ExpenseCategory(
-      iconData: Icons.local_pizza,
-      name: "Food",
-      spent: 12000,
-      remains: 1135,
-    ),
-    ExpenseCategory(
-      iconData: Icons.school,
-      name: "Club Fund",
-      spent: 15970,
-      remains: 1135,
-    ),
-    ExpenseCategory(
-      iconData: Icons.place,
-      name: "Recreation",
-      spent: 25000,
-      remains: 1135,
-    ),
-  ];
+  List<ExpenseCategory> expenseCategories = [];
 
   String? categoryName;
 
@@ -88,25 +51,52 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
           padding: const EdgeInsets.all(20.0),
           child: Column(
             children: [
-              for (ExpenseCategory e in expenses)
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        Icon(e.iconData ?? Icons.star),
-                        SizedBox(width: 20),
-                        Text(e.name),
-                      ],
-                    ),
-                    IconButton(
-                      onPressed: () {
-                        _showEditCategoryModal(e);
-                      },
-                      icon: Icon(Icons.edit),
-                    )
-                  ],
-                )
+              StreamBuilder<QuerySnapshot>(
+                stream: db.collection("category").snapshots(),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    final categories = snapshot.data?.docs;
+                    List<ExpenseCategory> categoriesList = [];
+                    if (categories == null) return Text("DB Fetching Error");
+                    for (var cat in categories) {
+                      String name = cat.get("name");
+                      final category = ExpenseCategory(
+                        name: name,
+                      );
+                      categoriesList.add(category);
+                    }
+                    return Expanded(
+                      child: ListView(
+                        children: [
+                          for (ExpenseCategory e in categoriesList)
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Row(
+                                  children: [
+                                    Icon(e.iconData ?? Icons.star),
+                                    SizedBox(width: 20),
+                                    Text(e.name),
+                                  ],
+                                ),
+                                IconButton(
+                                  onPressed: () {
+                                    _showEditCategoryModal(e);
+                                  },
+                                  icon: Icon(Icons.edit),
+                                )
+                              ],
+                            ),
+                        ],
+                      ),
+                    );
+                  } else {
+                    return Center(
+                      child: Text("Slow Retrieve or Could not Authenticate"),
+                    );
+                  }
+                },
+              ),
             ],
           ),
         ),
@@ -261,6 +251,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                               SizedBox(),
                               IconButton(
                                 onPressed: () {
+                                  // TODO: _doSometing
                                   Navigator.pop(context);
                                 },
                                 icon: Icon(Icons.done),

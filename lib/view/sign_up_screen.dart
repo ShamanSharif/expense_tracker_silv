@@ -23,8 +23,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   _createUser() async {
     try {
-      final credential =
-          await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: _emailAddress!,
         password: _password!,
       );

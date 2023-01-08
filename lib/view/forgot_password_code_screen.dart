@@ -1,9 +1,7 @@
-import 'package:expense_tracker/view/dashboard_screen.dart';
 import 'package:expense_tracker/view/forgot_password_new_password.dart';
 import 'package:expense_tracker/view/forgot_password_screen.dart';
 import 'package:flutter/material.dart';
 
-import 'sign_up_screen.dart';
 import 'viewmodel/et_button.dart';
 import 'viewmodel/et_text_button.dart';
 import 'viewmodel/et_text_field.dart';

@@ -1,4 +1,3 @@
-import 'package:expense_tracker/view/dashboard_screen.dart';
 import 'package:expense_tracker/view/forgot_password_code_screen.dart';
 import 'package:flutter/material.dart';
 

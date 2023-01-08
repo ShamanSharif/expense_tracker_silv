@@ -2,7 +2,6 @@ import 'package:expense_tracker/model/expense_model.dart';
 import 'package:expense_tracker/view/add_expense_screen.dart';
 import 'package:expense_tracker/view/categories_screen.dart';
 import 'package:expense_tracker/view/viewmodel/et_expense.dart';
-import 'package:expense_tracker/view/viewmodel/et_text_button.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 

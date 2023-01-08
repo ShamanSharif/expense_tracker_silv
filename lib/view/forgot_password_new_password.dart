@@ -1,10 +1,7 @@
-import 'package:expense_tracker/view/dashboard_screen.dart';
-import 'package:expense_tracker/view/forgot_password_screen.dart';
 import 'package:expense_tracker/view/sign_in_screen.dart';
 import 'package:flutter/material.dart';
 
 import 'viewmodel/et_button.dart';
-import 'viewmodel/et_text_button.dart';
 import 'viewmodel/et_text_field.dart';
 
 class ForgotPasswordNewPasswordScreen extends StatefulWidget {
