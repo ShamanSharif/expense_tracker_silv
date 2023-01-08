@@ -12,7 +12,8 @@ class CategoriesScreen extends StatefulWidget {
 }
 
 class _CategoriesScreenState extends State<CategoriesScreen> {
-  final GlobalKey<FormState> _keyOne = GlobalKey<FormState>();
+  final GlobalKey<FormState> _keyCreate = GlobalKey<FormState>();
+  final GlobalKey<FormState> _keyEdit = GlobalKey<FormState>();
   final db = FirebaseFirestore.instance;
 
   List<ExpenseCategory> expenseCategories = [];
@@ -59,8 +60,10 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                     List<ExpenseCategory> categoriesList = [];
                     if (categories == null) return Text("DB Fetching Error");
                     for (var cat in categories) {
-                      String name = cat.get("name");
+                      String? name = cat.get("name");
+                      if (name == null) continue;
                       final category = ExpenseCategory(
+                        docId: cat.id,
                         name: name,
                       );
                       categoriesList.add(category);
@@ -139,7 +142,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                         child: Padding(
                           padding: const EdgeInsets.all(10.0),
                           child: Form(
-                            key: _keyOne,
+                            key: _keyCreate,
                             child: Column(
                               mainAxisSize: MainAxisSize.min,
                               children: [
@@ -170,7 +173,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                                     SizedBox(),
                                     IconButton(
                                       onPressed: () {
-                                        _keyOne.currentState?.save();
+                                        _keyCreate.currentState?.save();
                                         db.collection("category").add({
                                           "name": categoryName
                                         }).then((DocumentReference doc) => print(
@@ -201,71 +204,96 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
     return showDialog(
       context: context,
       builder: (context) {
-        return Center(
-          child: Container(
-            width: MediaQuery.of(context).size.width * 0.7,
-            color: Colors.red,
-            child: Material(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Container(
-                    color: Color(0xFF3F9DBB),
-                    child: Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Center(
-                        child: Text(
-                          "Edit Category",
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.white,
+        return StatefulBuilder(
+          builder: (context, StateSetter state) {
+            return Center(
+              child: Container(
+                width: MediaQuery.of(context).size.width * 0.7,
+                color: Colors.red,
+                child: Material(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Container(
+                        color: Color(0xFF3F9DBB),
+                        child: Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Center(
+                            child: Text(
+                              "Edit Category",
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.white,
+                              ),
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  ),
-                  Container(
-                    color: Colors.white,
-                    child: Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 8.0),
-                            child: ETTextField(
-                              hintText: "Category name",
-                              initialValue: e.name,
+                      Container(
+                        color: Colors.white,
+                        child: Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Form(
+                            key: _keyEdit,
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 8.0),
+                                  child: ETTextField(
+                                    hintText: "Category name",
+                                    initialValue: e.name,
+                                    onSaved: (val) {
+                                      setState(() {
+                                        state(() {
+                                          categoryName = val;
+                                        });
+                                      });
+                                    },
+                                  ),
+                                ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    IconButton(
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                      icon: Icon(Icons.close),
+                                    ),
+                                    SizedBox(),
+                                    IconButton(
+                                      onPressed: () {
+                                        _keyEdit.currentState?.save();
+                                        db
+                                            .collection("category")
+                                            .doc(e.docId)
+                                            .set(
+                                          {
+                                            "name": categoryName,
+                                          },
+                                          SetOptions(merge: true),
+                                        );
+                                        Navigator.pop(context);
+                                      },
+                                      icon: Icon(Icons.done),
+                                    ),
+                                  ],
+                                ),
+                              ],
                             ),
                           ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              IconButton(
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                },
-                                icon: Icon(Icons.close),
-                              ),
-                              SizedBox(),
-                              IconButton(
-                                onPressed: () {
-                                  // TODO: _doSometing
-                                  Navigator.pop(context);
-                                },
-                                icon: Icon(Icons.done),
-                              ),
-                            ],
-                          ),
-                        ],
+                        ),
                       ),
-                    ),
+                    ],
                   ),
-                ],
+                ),
               ),
-            ),
-          ),
+            );
+          },
         );
       },
     );

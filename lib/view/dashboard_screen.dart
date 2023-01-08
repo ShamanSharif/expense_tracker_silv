@@ -17,42 +17,7 @@ class DashboardScreen extends StatefulWidget {
 class _DashboardScreenState extends State<DashboardScreen> {
   String _useremail = "";
   List<ExpenseCategory> expenses = [
-    ExpenseCategory(
-      iconData: Icons.monitor,
-      name: "Hardware",
-      spent: 20220,
-      remains: 654,
-    ),
-    ExpenseCategory(
-      iconData: Icons.book,
-      name: "Study Material",
-      spent: 7899,
-      remains: 6541,
-    ),
-    ExpenseCategory(
-      iconData: Icons.bus_alert,
-      name: "Transport",
-      spent: 14889,
-      remains: 3654,
-    ),
-    ExpenseCategory(
-      iconData: Icons.local_pizza,
-      name: "Food",
-      spent: 12000,
-      remains: 1654,
-    ),
-    ExpenseCategory(
-      iconData: Icons.school,
-      name: "Club Fund",
-      spent: 15970,
-      remains: 5654,
-    ),
-    ExpenseCategory(
-      iconData: Icons.place,
-      name: "Recreation",
-      spent: 25000,
-      remains: 21000,
-    ),
+    // TODO: Fetch From DB
   ];
 
   @override
