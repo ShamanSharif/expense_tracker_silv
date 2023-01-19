@@ -235,7 +235,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     final category = ExpenseCategory(
                       docId: cat.id,
                       name: name,
-                      isStarred: isStarred ?? false,
+                      isStarred: isStarred,
                     );
                     categoriesList.add(category);
                   }
@@ -249,7 +249,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               vertical: 5,
                             ),
                             child: ETExpense(expense: e),
-                          )
+                          ),
                         // Row(
                         //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         //   children: [

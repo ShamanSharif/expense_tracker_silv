@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:expense_tracker/view/sign_in_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -23,7 +24,17 @@ class _SignUpScreenState extends State<SignUpScreen> {
   String? _password;
   int? _radioGroupValue;
 
-  _createUser() async {
+  _updateUserInformation(String userID) async {
+    final db = FirebaseFirestore.instance;
+    await db.collection("user_data").doc(userID).set({
+      "name": _fullName,
+      "email": _emailAddress,
+      "phone": _phoneNumber,
+      "group": _radioGroupValue,
+    });
+  }
+
+  Future<bool> _createUser() async {
     try {
       UserCredential credential =
           await FirebaseAuth.instance.createUserWithEmailAndPassword(
@@ -31,6 +42,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
         password: _password!,
       );
       credential.user?.updateDisplayName(_fullName);
+      if (credential.user?.uid != null) {
+        await _updateUserInformation(credential.user!.uid);
+      }
+      return true;
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
         print('The password provided is too weak.');
@@ -40,6 +55,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     } catch (e) {
       print(e);
     }
+    return false;
   }
 
   @override
@@ -84,6 +100,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     ),
                     ETTextField(
                       hintText: "Enter Phone Number",
+                      onSaved: (value) {
+                        setState(() {
+                          _phoneNumber = value;
+                        });
+                      },
                     ),
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 10.0),
@@ -154,7 +175,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 onPressed: () async {
                   _formKey.currentState?.save();
                   if (_emailAddress != null && _password != null) {
-                    await _createUser();
+                    bool status = await _createUser();
+                    if (!status) return;
                     Navigator.pushAndRemoveUntil(
                       context,
                       MaterialPageRoute(
