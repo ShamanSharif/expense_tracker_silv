@@ -24,6 +24,12 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
 
   late int group;
 
+  @override
+  void initState() {
+    super.initState();
+    group = widget.group;
+  }
+
   String? categoryName;
   int alottedAmount = 0;
 
