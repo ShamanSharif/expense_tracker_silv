@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:expense_tracker/view/sign_in_screen.dart';
+import 'package:expense_tracker/view/successful_login_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-import 'dashboard_screen.dart';
 import 'viewmodel/et_button.dart';
 import 'viewmodel/et_text_button.dart';
 import 'viewmodel/et_text_field.dart';
@@ -181,7 +181,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       context,
                       MaterialPageRoute(
                         builder: (context) {
-                          return DashboardScreen();
+                          return SuccessfulLoginScreen();
                         },
                       ),
                       (route) => false,

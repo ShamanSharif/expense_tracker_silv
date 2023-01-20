@@ -9,14 +9,14 @@ import 'package:flutter/material.dart';
 
 import 'viewmodel/et_drawer_button.dart';
 
-class DashboardScreen extends StatefulWidget {
-  const DashboardScreen({super.key});
+class DashboardStudentScreen extends StatefulWidget {
+  const DashboardStudentScreen({super.key});
 
   @override
-  State<DashboardScreen> createState() => _DashboardScreenState();
+  State<DashboardStudentScreen> createState() => _DashboardStudentScreenState();
 }
 
-class _DashboardScreenState extends State<DashboardScreen> {
+class _DashboardStudentScreenState extends State<DashboardStudentScreen> {
   final db = FirebaseFirestore.instance;
 
   String _useremail = "";
@@ -158,53 +158,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
           children: [
             SizedBox(
               height: 20,
-            ),
-            Center(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "Alloted amount",
-                    style: TextStyle(
-                      color: Color(0xFF057FA6),
-                      fontSize: 18,
-                    ),
-                  ),
-                  SizedBox(height: 5),
-                  Text(
-                    "1,50,000 BDT",
-                    style: TextStyle(
-                      color: Color(0xFF057FA6),
-                      fontSize: 20,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                  SizedBox(height: 5),
-                  Text(
-                    "Remains",
-                    style: TextStyle(
-                      color: Color(0xFF057FA6),
-                      fontSize: 18,
-                    ),
-                  ),
-                  SizedBox(height: 5),
-                  Text(
-                    "1,00,000 BDT",
-                    style: TextStyle(
-                      color: Color(0xFF057FA6),
-                      fontSize: 20,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 20.0),
-              child: Container(
-                height: 30,
-                color: Colors.white,
-              ),
             ),
             Padding(
               padding: const EdgeInsets.all(20.0),
