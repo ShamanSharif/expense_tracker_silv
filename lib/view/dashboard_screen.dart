@@ -160,6 +160,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 Icon(
                   Icons.person_outlined,
                 ),
+                const SizedBox(
+                  width: 5,
+                ),
+                Text("Teacher"),
+                const SizedBox(
+                  width: 20,
+                ),
               ],
             ),
           ),

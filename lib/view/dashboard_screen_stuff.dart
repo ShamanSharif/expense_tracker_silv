@@ -160,6 +160,13 @@ class _DashboardStuffScreenState extends State<DashboardStuffScreen> {
                 Icon(
                   Icons.person_outlined,
                 ),
+                const SizedBox(
+                  width: 5,
+                ),
+                Text("Stuff"),
+                const SizedBox(
+                  width: 20,
+                ),
               ],
             ),
           ),

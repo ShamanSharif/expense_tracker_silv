@@ -41,7 +41,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
         email: _emailAddress!,
         password: _password!,
       );
-      credential.user?.updateDisplayName(_fullName);
       if (credential.user?.uid != null) {
         await _updateUserInformation(credential.user!.uid);
       }
@@ -174,7 +173,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
               ETButton(
                 onPressed: () async {
                   _formKey.currentState?.save();
-                  if (_emailAddress != null && _password != null) {
+                  if (_emailAddress != null &&
+                      _password != null &&
+                      _fullName != null &&
+                      _phoneNumber != null &&
+                      _radioGroupValue != null) {
                     bool status = await _createUser();
                     if (!status) return;
                     Navigator.pushAndRemoveUntil(

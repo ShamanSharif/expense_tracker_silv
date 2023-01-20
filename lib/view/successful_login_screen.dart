@@ -15,8 +15,9 @@ class SuccessfulLoginScreen extends StatefulWidget {
 
 class _SuccessfulLoginScreenState extends State<SuccessfulLoginScreen> {
   final db = FirebaseFirestore.instance;
-  String username = "";
+
   String userID = "";
+  var userData;
 
   @override
   void initState() {
@@ -26,16 +27,18 @@ class _SuccessfulLoginScreenState extends State<SuccessfulLoginScreen> {
         print('User is currently signed out!');
       } else {
         setState(() {
-          username = user.displayName ?? "";
           userID = user.uid;
+          _getUserGroup();
         });
       }
     });
   }
 
-  Future<int> _getUserGroup() async {
-    final userData = await db.collection("user_data").doc(userID).get();
-    return userData["group"];
+  Future<void> _getUserGroup() async {
+    final ud = await db.collection("user_data").doc(userID).get();
+    setState(() {
+      userData = ud;
+    });
   }
 
   @override
@@ -55,7 +58,7 @@ class _SuccessfulLoginScreenState extends State<SuccessfulLoginScreen> {
               height: 20,
             ),
             Text(
-              "Hello $username",
+              "Hello ${userData?["name"] ?? ""}",
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontWeight: FontWeight.bold,
@@ -73,59 +76,61 @@ class _SuccessfulLoginScreenState extends State<SuccessfulLoginScreen> {
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 50.0),
-              child: ETButton(
-                onPressed: () async {
-                  int group = await _getUserGroup();
+              child: userData == null
+                  ? SizedBox()
+                  : ETButton(
+                      onPressed: () async {
+                        int group = userData["group"];
 
-                  switch (group) {
-                    case 1:
-                      Navigator.pushAndRemoveUntil(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) {
-                            return DashboardStudentScreen();
-                          },
+                        switch (group) {
+                          case 1:
+                            Navigator.pushAndRemoveUntil(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) {
+                                  return DashboardStudentScreen();
+                                },
+                              ),
+                              (route) => false,
+                            );
+                            break;
+                          case 2:
+                            Navigator.pushAndRemoveUntil(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) {
+                                  return DashboardScreen();
+                                },
+                              ),
+                              (route) => false,
+                            );
+                            break;
+                          case 3:
+                            Navigator.pushAndRemoveUntil(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) {
+                                  return DashboardStuffScreen();
+                                },
+                              ),
+                              (route) => false,
+                            );
+                            break;
+                          default:
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text("Something went wrong"),
+                              ),
+                            );
+                        }
+                      },
+                      child: Text(
+                        "Go To Dashboard",
+                        style: TextStyle(
+                          color: Colors.white,
                         ),
-                        (route) => false,
-                      );
-                      break;
-                    case 2:
-                      Navigator.pushAndRemoveUntil(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) {
-                            return DashboardScreen();
-                          },
-                        ),
-                        (route) => false,
-                      );
-                      break;
-                    case 3:
-                      Navigator.pushAndRemoveUntil(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) {
-                            return DashboardStuffScreen();
-                          },
-                        ),
-                        (route) => false,
-                      );
-                      break;
-                    default:
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text("Something went wrong"),
-                        ),
-                      );
-                  }
-                },
-                child: Text(
-                  "Go To Dashboard",
-                  style: TextStyle(
-                    color: Colors.white,
-                  ),
-                ),
-              ),
+                      ),
+                    ),
             ),
           ],
         ),
