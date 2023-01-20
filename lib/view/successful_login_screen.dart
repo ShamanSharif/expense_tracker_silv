@@ -77,11 +77,10 @@ class _SuccessfulLoginScreenState extends State<SuccessfulLoginScreen> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 50.0),
               child: userData == null
-                  ? SizedBox()
+                  ? Center(child: CircularProgressIndicator())
                   : ETButton(
                       onPressed: () async {
                         int group = userData["group"];
-
                         switch (group) {
                           case 1:
                             Navigator.pushAndRemoveUntil(

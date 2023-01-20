@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:expense_tracker/model/expense_model.dart';
 import 'package:expense_tracker/view/add_expense_screen.dart';
 import 'package:expense_tracker/view/categories_screen.dart';
+import 'package:expense_tracker/view/category_expenses.dart';
 import 'package:expense_tracker/view/viewmodel/et_expense.dart';
 import 'package:expense_tracker/view/welcome_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -22,6 +23,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   String _userID = "";
   var userObject;
+  int totalAlottedAmount = 0;
+  int totalSpentAmount = 0;
+  int totalRemaindAmount = 0;
 
   @override
   void initState() {
@@ -216,7 +220,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) {
-                                    return CategoriesScreen();
+                                    return CategoriesScreen(
+                                      group: 2,
+                                    );
                                   },
                                 ),
                               );
@@ -263,7 +269,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   ),
                   SizedBox(height: 5),
                   Text(
-                    "1,50,000 BDT",
+                    "$totalAlottedAmount BDT",
                     style: TextStyle(
                       color: Color(0xFF057FA6),
                       fontSize: 20,
@@ -280,7 +286,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   ),
                   SizedBox(height: 5),
                   Text(
-                    "1,00,000 BDT",
+                    "$totalRemaindAmount BDT",
                     style: TextStyle(
                       color: Color(0xFF057FA6),
                       fontSize: 20,
@@ -311,22 +317,35 @@ class _DashboardScreenState extends State<DashboardScreen> {
             StreamBuilder<QuerySnapshot>(
               stream: db.collection("category").snapshots(),
               builder: (context, snapshot) {
+                totalAlottedAmount = 0;
+                totalSpentAmount = 0;
                 if (snapshot.hasData) {
                   final categories = snapshot.data?.docs;
                   List<ExpenseCategory> categoriesList = [];
                   if (categories == null) return Text("DB Fetching Error");
                   for (var cat in categories) {
                     String? name = cat.get("name");
+                    int alottedAmount = cat.get("alottedAmount");
+                    int spentAmount = cat.get("spentAmount");
                     bool? isStarred = cat.get("starred");
+
+                    totalAlottedAmount += alottedAmount;
+                    totalSpentAmount += spentAmount;
+                    totalRemaindAmount = totalAlottedAmount - totalSpentAmount;
+
                     if (isStarred == null || isStarred == false) continue;
                     if (name == null) continue;
                     final category = ExpenseCategory(
                       docId: cat.id,
                       name: name,
+                      alotted: alottedAmount,
+                      spent: spentAmount,
+                      remains: alottedAmount - spentAmount,
                       isStarred: isStarred,
                     );
                     categoriesList.add(category);
                   }
+
                   return Expanded(
                     child: ListView(
                       children: [
@@ -336,7 +355,20 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               horizontal: 20,
                               vertical: 5,
                             ),
-                            child: ETExpense(expense: e),
+                            child: GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) {
+                                        return CategoryExpensesScreen(
+                                          expenseCategory: e,
+                                        );
+                                      },
+                                    ),
+                                  );
+                                },
+                                child: ETExpense(expense: e)),
                           ),
                         // Row(
                         //   mainAxisAlignment: MainAxisAlignment.spaceBetween,

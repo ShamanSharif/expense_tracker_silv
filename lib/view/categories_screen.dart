@@ -5,7 +5,11 @@ import 'package:flutter/material.dart';
 import 'viewmodel/et_text_field.dart';
 
 class CategoriesScreen extends StatefulWidget {
-  const CategoriesScreen({super.key});
+  final int group;
+  const CategoriesScreen({
+    super.key,
+    required this.group,
+  });
 
   @override
   State<CategoriesScreen> createState() => _CategoriesScreenState();
@@ -18,7 +22,10 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
 
   List<ExpenseCategory> expenseCategories = [];
 
+  late int group;
+
   String? categoryName;
+  int alottedAmount = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -177,6 +184,24 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                                     },
                                   ),
                                 ),
+                                group == 2
+                                    ? Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 8.0),
+                                        child: ETTextField(
+                                          hintText: "Alotted Amount",
+                                          onSaved: (value) {
+                                            setState(() {
+                                              state(() {
+                                                alottedAmount = int.tryParse(
+                                                        value ?? "0") ??
+                                                    0;
+                                              });
+                                            });
+                                          },
+                                        ),
+                                      )
+                                    : SizedBox(),
                                 Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceEvenly,
@@ -193,6 +218,8 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                                         _keyCreate.currentState?.save();
                                         db.collection("category").add({
                                           "name": categoryName,
+                                          "alottedAmount": alottedAmount,
+                                          "spentAmount": 0,
                                           "starred": false,
                                         }).then((DocumentReference doc) => print(
                                             'DocumentSnapshot added with ID: ${doc.id}'));
@@ -272,6 +299,24 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                                     },
                                   ),
                                 ),
+                                group == 2
+                                    ? Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 8.0),
+                                        child: ETTextField(
+                                          hintText: "Alotted Amount",
+                                          onSaved: (value) {
+                                            setState(() {
+                                              state(() {
+                                                alottedAmount = int.tryParse(
+                                                        value ?? "0") ??
+                                                    0;
+                                              });
+                                            });
+                                          },
+                                        ),
+                                      )
+                                    : SizedBox(),
                                 Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceEvenly,
@@ -292,6 +337,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                                             .set(
                                           {
                                             "name": categoryName,
+                                            "alottedAmount": alottedAmount,
                                           },
                                           SetOptions(merge: true),
                                         );

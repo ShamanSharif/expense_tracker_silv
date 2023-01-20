@@ -7,6 +7,7 @@ import 'package:expense_tracker/view/welcome_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+import 'category_expenses.dart';
 import 'viewmodel/et_button.dart';
 import 'viewmodel/et_drawer_button.dart';
 
@@ -216,7 +217,9 @@ class _DashboardStuffScreenState extends State<DashboardStuffScreen> {
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) {
-                                    return CategoriesScreen();
+                                    return CategoriesScreen(
+                                      group: 3,
+                                    );
                                   },
                                 ),
                               );
@@ -270,16 +273,23 @@ class _DashboardStuffScreenState extends State<DashboardStuffScreen> {
                   if (categories == null) return Text("DB Fetching Error");
                   for (var cat in categories) {
                     String? name = cat.get("name");
+                    int alottedAmount = cat.get("alottedAmount");
+                    int spentAmount = cat.get("spentAmount");
                     bool? isStarred = cat.get("starred");
+
                     if (isStarred == null || isStarred == false) continue;
                     if (name == null) continue;
                     final category = ExpenseCategory(
                       docId: cat.id,
                       name: name,
+                      alotted: alottedAmount,
+                      spent: spentAmount,
+                      remains: alottedAmount - spentAmount,
                       isStarred: isStarred,
                     );
                     categoriesList.add(category);
                   }
+
                   return Expanded(
                     child: ListView(
                       children: [
@@ -289,7 +299,20 @@ class _DashboardStuffScreenState extends State<DashboardStuffScreen> {
                               horizontal: 20,
                               vertical: 5,
                             ),
-                            child: ETExpense(expense: e),
+                            child: GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) {
+                                        return CategoryExpensesScreen(
+                                          expenseCategory: e,
+                                        );
+                                      },
+                                    ),
+                                  );
+                                },
+                                child: ETExpense(expense: e)),
                           ),
                         // Row(
                         //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
