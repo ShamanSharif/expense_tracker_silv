@@ -2,22 +2,22 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:expense_tracker/model/expense_model.dart';
 import 'package:expense_tracker/view/add_expense_screen.dart';
 import 'package:expense_tracker/view/categories_screen.dart';
-import 'package:expense_tracker/view/viewmodel/et_button.dart';
 import 'package:expense_tracker/view/viewmodel/et_expense.dart';
 import 'package:expense_tracker/view/welcome_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+import 'viewmodel/et_button.dart';
 import 'viewmodel/et_drawer_button.dart';
 
-class DashboardStudentScreen extends StatefulWidget {
-  const DashboardStudentScreen({super.key});
+class DashboardStuffScreen extends StatefulWidget {
+  const DashboardStuffScreen({super.key});
 
   @override
-  State<DashboardStudentScreen> createState() => _DashboardStudentScreenState();
+  State<DashboardStuffScreen> createState() => _DashboardStuffScreenState();
 }
 
-class _DashboardStudentScreenState extends State<DashboardStudentScreen> {
+class _DashboardStuffScreenState extends State<DashboardStuffScreen> {
   final db = FirebaseFirestore.instance;
 
   String _userID = "";

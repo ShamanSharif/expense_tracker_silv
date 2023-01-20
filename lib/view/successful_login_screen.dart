@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:expense_tracker/view/dashboard_screen.dart';
+import 'package:expense_tracker/view/dashboard_screen_stuff.dart';
 import 'package:expense_tracker/view/dashboard_student_screen.dart';
 import 'package:expense_tracker/view/viewmodel/et_button.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -94,6 +95,17 @@ class _SuccessfulLoginScreenState extends State<SuccessfulLoginScreen> {
                         MaterialPageRoute(
                           builder: (context) {
                             return DashboardScreen();
+                          },
+                        ),
+                        (route) => false,
+                      );
+                      break;
+                    case 3:
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) {
+                            return DashboardStuffScreen();
                           },
                         ),
                         (route) => false,

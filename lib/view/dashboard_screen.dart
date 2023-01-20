@@ -7,6 +7,7 @@ import 'package:expense_tracker/view/welcome_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+import 'viewmodel/et_button.dart';
 import 'viewmodel/et_drawer_button.dart';
 
 class DashboardScreen extends StatefulWidget {
@@ -19,7 +20,8 @@ class DashboardScreen extends StatefulWidget {
 class _DashboardScreenState extends State<DashboardScreen> {
   final db = FirebaseFirestore.instance;
 
-  String _useremail = "";
+  String _userID = "";
+  var userObject;
 
   @override
   void initState() {
@@ -29,10 +31,113 @@ class _DashboardScreenState extends State<DashboardScreen> {
         print('User is currently signed out!');
       } else {
         setState(() {
-          _useremail = user.displayName ?? "";
+          _userID = user.uid;
         });
+        _getUserData();
       }
     });
+  }
+
+  _getUserData() async {
+    final userData = await db.collection("user_data").doc(_userID).get();
+    setState(() {
+      userObject = userData;
+    });
+  }
+
+  _showUserModal() {
+    return showDialog(
+      context: context,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, StateSetter state) {
+            return Center(
+              child: Container(
+                width: MediaQuery.of(context).size.width * 0.7,
+                color: Colors.red,
+                child: Material(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Container(
+                        color: Color(0xFF3F9DBB),
+                        child: Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Center(
+                            child: Text(
+                              "Profile",
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Container(
+                        color: Colors.white,
+                        child: Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Column(
+                            children: [
+                              Text(
+                                userObject["name"],
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              const SizedBox(height: 10),
+                              Text(userObject["phone"]),
+                              const SizedBox(height: 5),
+                              Text(userObject["email"]),
+                              const SizedBox(height: 10),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: ETButton(
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                      child: Text("Close"),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 5),
+                                  Expanded(
+                                    child: ETButton(
+                                      onPressed: () {
+                                        FirebaseAuth.instance.signOut().then(
+                                              (value) =>
+                                                  Navigator.pushAndRemoveUntil(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) {
+                                                    return WelcomeScreen();
+                                                  },
+                                                ),
+                                                (route) => false,
+                                              ),
+                                            );
+                                      },
+                                      color: Colors.red,
+                                      child: Text("Sign Out"),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
   }
 
   @override
@@ -48,34 +153,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
         actions: [
           GestureDetector(
             onTap: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text("Double Tap to Sign Out"),
-                ),
-              );
-            },
-            onDoubleTap: () {
-              FirebaseAuth.instance.signOut().then(
-                    (value) => Navigator.pushAndRemoveUntil(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) {
-                          return WelcomeScreen();
-                        },
-                      ),
-                      (route) => false,
-                    ),
-                  );
+              _showUserModal();
             },
             child: Row(
               children: [
                 Icon(
                   Icons.person_outlined,
                 ),
-                const SizedBox(
-                  width: 5,
-                ),
-                Text(_useremail),
               ],
             ),
           ),
