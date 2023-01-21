@@ -272,6 +272,7 @@ class _DashboardStudentScreenState extends State<DashboardStudentScreen> {
                   List<ExpenseCategory> categoriesList = [];
                   if (categories == null) return Text("DB Fetching Error");
                   for (var cat in categories) {
+                    print(cat.get("name"));
                     String? name = cat.get("name");
                     int alottedAmount = cat.get("alottedAmount");
                     int spentAmount = cat.get("spentAmount");

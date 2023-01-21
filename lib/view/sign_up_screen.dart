@@ -16,6 +16,7 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
+  final db = FirebaseFirestore.instance;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   bool _osbcureText = false;
   String? _fullName;
@@ -23,16 +24,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
   String? _emailAddress;
   String? _password;
   int? _radioGroupValue;
-
-  _updateUserInformation(String userID) async {
-    final db = FirebaseFirestore.instance;
-    await db.collection("user_data").doc(userID).set({
-      "name": _fullName,
-      "email": _emailAddress,
-      "phone": _phoneNumber,
-      "group": _radioGroupValue,
-    });
-  }
 
   Future<bool> _createUser() async {
     try {
@@ -42,7 +33,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
         password: _password!,
       );
       if (credential.user?.uid != null) {
-        await _updateUserInformation(credential.user!.uid);
+        await db.collection("user_data").doc(credential.user?.uid).set({
+          "name": _fullName,
+          "email": _emailAddress,
+          "phone": _phoneNumber,
+          "group": _radioGroupValue,
+        });
       }
       return true;
     } on FirebaseAuthException catch (e) {
