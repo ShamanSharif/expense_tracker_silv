@@ -22,14 +22,21 @@ class _SignInScreenState extends State<SignInScreen> {
   String? _emailAddress;
   String? _password;
 
-  Future<UserCredential?> _signIn() async {
+  _signIn() async {
     try {
-      UserCredential? userCredential =
-          await FirebaseAuth.instance.signInWithEmailAndPassword(
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: _emailAddress!,
         password: _password!,
       );
-      return userCredential;
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(
+          builder: (context) {
+            return SuccessfulLoginScreen();
+          },
+        ),
+        (route) => false,
+      );
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
         print('No user found for that email.');
@@ -37,7 +44,6 @@ class _SignInScreenState extends State<SignInScreen> {
         print('Wrong password provided for that user.');
       }
     }
-    return null;
   }
 
   @override
@@ -115,17 +121,7 @@ class _SignInScreenState extends State<SignInScreen> {
                     if (_emailAddress == null || _password == null) {
                       return;
                     }
-                    UserCredential? userCredential = await _signIn();
-                    if (userCredential == null) return;
-                    Navigator.pushAndRemoveUntil(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) {
-                          return SuccessfulLoginScreen();
-                        },
-                      ),
-                      (route) => false,
-                    );
+                    await _signIn();
                   },
                   child: Text(
                     "NEXT",

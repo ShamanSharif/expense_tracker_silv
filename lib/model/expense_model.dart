@@ -23,16 +23,16 @@ class ExpenseCategory {
 
 class Expense {
   int amount;
-  int quantity;
+  String quantity;
   String name;
-  String dateTime;
+  DateTime dateTime;
   String? note;
 
   Expense({
     required this.name,
     required this.amount,
     required this.dateTime,
-    this.quantity = 1,
+    this.quantity = "1",
     this.note,
   });
 }

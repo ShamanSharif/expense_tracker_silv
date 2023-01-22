@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:expense_tracker/model/validator_classes.dart';
 import 'package:expense_tracker/view/sign_in_screen.dart';
 import 'package:expense_tracker/view/successful_login_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -76,6 +77,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   children: [
                     ETTextField(
                       hintText: "Full Name",
+                      validator: (val) {
+                        if (val == null || val.isEmpty) {
+                          return "Please enter your full name";
+                        }
+                        return null;
+                      },
                       onSaved: (value) {
                         setState(() {
                           _fullName = value;
@@ -86,6 +93,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       padding: const EdgeInsets.symmetric(vertical: 10.0),
                       child: ETTextField(
                         hintText: "Enter Email",
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return "Please enter a valid email";
+                          } else if (!value.isValidEmail()) {
+                            return "Please enter a valid email";
+                          }
+                          return null;
+                        },
                         onSaved: (value) {
                           setState(() {
                             _emailAddress = value;
@@ -95,6 +110,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     ),
                     ETTextField(
                       hintText: "Enter Phone Number",
+                      validator: (value) {
+                        if (value == null || int.tryParse(value) != null) {
+                          return "Please enter a valid number";
+                        } else if (int.parse(value).toString().length != 10) {
+                          return "Number format 01XXXXXXXXX";
+                        }
+                        return null;
+                      },
                       onSaved: (value) {
                         setState(() {
                           _phoneNumber = value;
@@ -105,6 +128,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       padding: const EdgeInsets.symmetric(vertical: 10.0),
                       child: ETTextField(
                         hintText: "Enter Password",
+                        validator: (value) {
+                          if (value == null || value.length < 8) {
+                            return "Password must be 8 characters or more";
+                          }
+                          return null;
+                        },
                         onSaved: (value) {
                           setState(() {
                             _password = value;
@@ -168,12 +197,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
               ),
               ETButton(
                 onPressed: () async {
+                  if (!_formKey.currentState!.validate()) {
+                    return;
+                  }
                   _formKey.currentState?.save();
-                  if (_emailAddress != null &&
-                      _password != null &&
-                      _fullName != null &&
-                      _phoneNumber != null &&
-                      _radioGroupValue != null) {
+                  if (_radioGroupValue != null) {
                     bool status = await _createUser();
                     if (!status) return;
                     Navigator.pushAndRemoveUntil(

@@ -257,43 +257,55 @@ class _DashboardScreenState extends State<DashboardScreen> {
               height: 20,
             ),
             Center(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "Alloted amount",
-                    style: TextStyle(
-                      color: Color(0xFF057FA6),
-                      fontSize: 18,
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Alloted amount",
+                      style: TextStyle(
+                        color: Color(0xFF057FA6),
+                        fontSize: 18,
+                      ),
                     ),
-                  ),
-                  SizedBox(height: 5),
-                  Text(
-                    "$totalAlottedAmount BDT",
-                    style: TextStyle(
-                      color: Color(0xFF057FA6),
-                      fontSize: 20,
-                      fontWeight: FontWeight.w700,
+                    SizedBox(height: 5),
+                    Text(
+                      "$totalAlottedAmount BDT",
+                      style: TextStyle(
+                        color: Color(0xFF057FA6),
+                        fontSize: 20,
+                        fontWeight: FontWeight.w700,
+                      ),
                     ),
-                  ),
-                  SizedBox(height: 5),
-                  Text(
-                    "Remains",
-                    style: TextStyle(
-                      color: Color(0xFF057FA6),
-                      fontSize: 18,
+                    SizedBox(height: 5),
+                    Text(
+                      "Remains",
+                      style: TextStyle(
+                        color: Color(0xFF057FA6),
+                        fontSize: 18,
+                      ),
                     ),
-                  ),
-                  SizedBox(height: 5),
-                  Text(
-                    "$totalRemaindAmount BDT",
-                    style: TextStyle(
-                      color: Color(0xFF057FA6),
-                      fontSize: 20,
-                      fontWeight: FontWeight.w700,
+                    SizedBox(height: 5),
+                    Text(
+                      "$totalRemaindAmount BDT",
+                      style: TextStyle(
+                        color: Color(0xFF057FA6),
+                        fontSize: 20,
+                        fontWeight: FontWeight.w700,
+                      ),
                     ),
-                  ),
-                ],
+                    Align(
+                      alignment: Alignment.bottomRight,
+                      child: IconButton(
+                        onPressed: () {
+                          setState(() {});
+                        },
+                        icon: Icon(Icons.refresh),
+                      ),
+                    )
+                  ],
+                ),
               ),
             ),
             Padding(
@@ -319,6 +331,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               builder: (context, snapshot) {
                 totalAlottedAmount = 0;
                 totalSpentAmount = 0;
+                totalRemaindAmount = 0;
                 if (snapshot.hasData) {
                   final categories = snapshot.data?.docs;
                   List<ExpenseCategory> categoriesList = [];

@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dropdown_search2/dropdown_search2.dart';
 import 'package:expense_tracker/model/expense_model.dart';
+import 'package:expense_tracker/model/validator_classes.dart';
 import 'package:expense_tracker/view/viewmodel/et_text_field.dart';
 import 'package:flutter/material.dart';
 
@@ -17,9 +18,9 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
   List<ExpenseCategory> expenseCategories = [];
   ExpenseCategory? selectedExpenseCategory;
   int? amount;
-  int? quantity;
+  String? quantity;
   String? name;
-  String? dateTime;
+  DateTime? dateTime;
   String? note;
 
   @override
@@ -43,6 +44,18 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
     setState(() {});
   }
 
+  _showDatePicker() async {
+    dateTime = await showDatePicker(
+      context: context,
+      initialDate: dateTime ?? DateTime.now(),
+      firstDate: DateTime.utc(2020),
+      lastDate: DateTime.utc(2050),
+      currentDate: dateTime,
+    );
+    setState(() {});
+    print(dateTime);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -56,12 +69,11 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
         actions: [
           IconButton(
             onPressed: () async {
+              if (!_formKey.currentState!.validate()) {
+                return;
+              }
               _formKey.currentState?.save();
-              if (amount == null ||
-                  selectedExpenseCategory == null ||
-                  name == null ||
-                  dateTime == null ||
-                  quantity == null) {
+              if (selectedExpenseCategory == null || dateTime == null) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                     content: Text("Please fill all the fields"),
@@ -78,7 +90,7 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
                   "name": name,
                   "amount": amount,
                   "quantity": quantity,
-                  "dateTime": dateTime,
+                  "dateTime": dateTime!.showDateFormatted(),
                   "note": note,
                 });
                 await db
@@ -118,6 +130,15 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
                         ),
                         child: ETTextField(
                           hintText: "Amount",
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return "Please enter a valid amount";
+                            }
+                            if (int.tryParse(value) == null) {
+                              return "Amount should be integer";
+                            }
+                            return null;
+                          },
                           onSaved: (val) {
                             setState(() {
                               amount = int.tryParse(val ?? "");
@@ -163,6 +184,12 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
                         ),
                         child: ETTextField(
                           hintText: "Name",
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return "Please enter a name";
+                            }
+                            return null;
+                          },
                           onSaved: (val) {
                             setState(() {
                               name = val;
@@ -176,9 +203,15 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
                         ),
                         child: ETTextField(
                           hintText: "Quantity",
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return "Please enter a valid quantity";
+                            }
+                            return null;
+                          },
                           onSaved: (val) {
                             setState(() {
-                              quantity = int.tryParse(val ?? "1");
+                              quantity = val;
                             });
                           },
                         ),
@@ -187,13 +220,40 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
                         padding: const EdgeInsets.symmetric(
                           vertical: 5,
                         ),
-                        child: ETTextField(
-                          hintText: "Date Time",
-                          onSaved: (val) {
-                            setState(() {
-                              dateTime = val;
-                            });
+                        child: OutlinedButton(
+                          onPressed: () {
+                            _showDatePicker();
                           },
+                          style: ButtonStyle(
+                            side: MaterialStateProperty.all(
+                              BorderSide(
+                                color: Color(0xFFD1D1D1),
+                                width: 2.0,
+                              ),
+                            ),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                              vertical: 20.0,
+                              horizontal: 0.0,
+                            ),
+                            child: Row(
+                              children: [
+                                Text(
+                                  dateTime == null
+                                      ? 'Open Date Picker'
+                                      : dateTime!.showDateFormatted(),
+                                  // textAlign: TextAlign.left,
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    color: dateTime == null
+                                        ? Colors.grey.shade700
+                                        : Colors.black,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
                         ),
                       ),
                       Padding(

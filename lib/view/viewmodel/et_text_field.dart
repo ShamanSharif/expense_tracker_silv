@@ -5,12 +5,14 @@ class ETTextField extends StatelessWidget {
   final String? initialValue;
   final Widget? suffixIcon;
   final bool osbcureText;
+  final String? Function(String?)? validator;
   final void Function(String?)? onSaved;
   const ETTextField({
     super.key,
     this.hintText,
     this.suffixIcon,
     this.initialValue,
+    this.validator,
     this.onSaved,
     this.osbcureText = false,
   });
@@ -20,6 +22,7 @@ class ETTextField extends StatelessWidget {
     return TextFormField(
       obscureText: osbcureText,
       initialValue: initialValue,
+      validator: validator,
       onSaved: onSaved,
       decoration: InputDecoration(
         focusedBorder: OutlineInputBorder(

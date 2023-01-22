@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:expense_tracker/model/expense_model.dart';
+import 'package:expense_tracker/model/validator_classes.dart';
 import 'package:flutter/material.dart';
 
 import 'viewmodel/et_text_field.dart';
@@ -110,9 +111,10 @@ class _CategoryExpensesScreenState extends State<CategoryExpensesScreen> {
                       print(exp);
                       String? name = exp.get("name");
                       int? amount = exp.get("amount");
-                      int? quantity = exp.get("quantity");
+                      String? quantity = exp.get("quantity");
                       String? note = exp.get("note");
-                      String? dateTime = exp.get("dateTime");
+                      DateTime? dateTime =
+                          exp.get("dateTime").toString().getDateFormatted();
                       if (name == null ||
                           amount == null ||
                           quantity == null ||
@@ -136,7 +138,17 @@ class _CategoryExpensesScreenState extends State<CategoryExpensesScreen> {
                               child: Row(
                                 children: [
                                   Expanded(
-                                    flex: 3,
+                                    child: Text(
+                                      "Date",
+                                      textAlign: TextAlign.start,
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    flex: 1,
                                     child: Text(
                                       "Name",
                                       style: TextStyle(
@@ -165,16 +177,6 @@ class _CategoryExpensesScreenState extends State<CategoryExpensesScreen> {
                                       ),
                                     ),
                                   ),
-                                  Expanded(
-                                    child: Text(
-                                      "Total",
-                                      textAlign: TextAlign.end,
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ),
                                 ],
                               ),
                             ),
@@ -190,7 +192,15 @@ class _CategoryExpensesScreenState extends State<CategoryExpensesScreen> {
                                       MainAxisAlignment.spaceBetween,
                                   children: [
                                     Expanded(
-                                      flex: 3,
+                                      child: Text(
+                                        expenseList[i]
+                                            .dateTime
+                                            .showDateFormatted(),
+                                        textAlign: TextAlign.start,
+                                      ),
+                                    ),
+                                    Expanded(
+                                      flex: 1,
                                       child: Text(expenseList[i].name),
                                     ),
                                     Expanded(
@@ -203,15 +213,6 @@ class _CategoryExpensesScreenState extends State<CategoryExpensesScreen> {
                                       child: Text(
                                         expenseList[i].amount.toString(),
                                         textAlign: TextAlign.end,
-                                      ),
-                                    ),
-                                    Expanded(
-                                      child: Text(
-                                        "${expenseList[i].quantity * expenseList[i].amount}",
-                                        textAlign: TextAlign.end,
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                        ),
                                       ),
                                     ),
                                   ],

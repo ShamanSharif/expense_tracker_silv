@@ -112,12 +112,28 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                                     Text(e.name),
                                   ],
                                 ),
-                                IconButton(
-                                  onPressed: () {
-                                    _showEditCategoryModal(e);
-                                  },
-                                  icon: Icon(Icons.edit),
-                                )
+                                group == 2
+                                    ? IconButton(
+                                        onPressed: () {
+                                          _showEditCategoryModal(e);
+                                        },
+                                        icon: Icon(Icons.edit),
+                                      )
+                                    : IconButton(
+                                        onPressed: () {
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(
+                                            SnackBar(
+                                              content: Text(
+                                                  "Only teachers can edit the categories"),
+                                            ),
+                                          );
+                                        },
+                                        icon: Icon(
+                                          Icons.edit,
+                                          color: Colors.grey,
+                                        ),
+                                      ),
                               ],
                             ),
                         ],
@@ -181,6 +197,12 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                                       const EdgeInsets.symmetric(vertical: 8.0),
                                   child: ETTextField(
                                     hintText: "Category name",
+                                    validator: (value) {
+                                      if (value == null || value.isEmpty) {
+                                        return "Please enter a valid name";
+                                      }
+                                      return null;
+                                    },
                                     onSaved: (value) {
                                       setState(() {
                                         state(() {
@@ -196,6 +218,16 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                                             vertical: 8.0),
                                         child: ETTextField(
                                           hintText: "Alotted Amount",
+                                          validator: (value) {
+                                            if (value == null ||
+                                                value.isEmpty) {
+                                              return "Please enter a amount";
+                                            } else if (int.tryParse(value) ==
+                                                null) {
+                                              return "Amount must be in integer";
+                                            }
+                                            return null;
+                                          },
                                           onSaved: (value) {
                                             setState(() {
                                               state(() {
@@ -296,6 +328,12 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                                   child: ETTextField(
                                     hintText: "Category name",
                                     initialValue: e.name,
+                                    validator: (value) {
+                                      if (value == null || value.isEmpty) {
+                                        return "Please enter a valid name";
+                                      }
+                                      return null;
+                                    },
                                     onSaved: (val) {
                                       setState(() {
                                         state(() {
@@ -311,6 +349,16 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                                             vertical: 8.0),
                                         child: ETTextField(
                                           hintText: "Alotted Amount",
+                                          validator: (value) {
+                                            if (value == null ||
+                                                value.isEmpty) {
+                                              return "Please enter a amount";
+                                            } else if (int.tryParse(value) ==
+                                                null) {
+                                              return "Amount must be in integer";
+                                            }
+                                            return null;
+                                          },
                                           onSaved: (value) {
                                             setState(() {
                                               state(() {
