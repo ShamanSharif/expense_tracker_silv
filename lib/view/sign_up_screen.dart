@@ -111,7 +111,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     ETTextField(
                       hintText: "Enter Phone Number",
                       validator: (value) {
-                        if (value == null || int.tryParse(value) != null) {
+                        if (value == null || int.tryParse(value) == null) {
                           return "Please enter a valid number";
                         } else if (int.parse(value).toString().length != 10) {
                           return "Number format 01XXXXXXXXX";
